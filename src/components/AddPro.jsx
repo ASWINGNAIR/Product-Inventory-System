@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { addProductApi } from '../Services/allAPi';
 
 function AddPro() {
   const [show, setShow] = useState(false);
@@ -15,10 +16,38 @@ function AddPro() {
   })
  console.log(proDetails);
 
- const handleClose = () => setShow(false);
+ const handleClose = () => {setShow(false);
+  handleCancel()
+ }
  const handleShow = () => setShow(true);
  
 
+ 
+ const handleCancel = () => [
+  setProDetails({
+    name:"",
+    category:"",
+    price:"",
+    stockDetails:"",
+    description:""
+  })
+ ]
+
+
+
+ const handleAdd = async() => {
+  const {name,category,price,stockDetails,description}=proDetails
+
+  if(!name || !category || !price || !stockDetails || !description){
+    alert('Please enter the form completely')
+  }
+  else{
+    const result = await addProductApi({name,category,price,stockDetails,description})
+    console.log(result);
+
+    
+  }
+}
  
 
 
@@ -37,27 +66,27 @@ function AddPro() {
         <p>Please fill the following details</p>
             <form className='border border-secondsry p-3 rounded'>
                 <div className="mb-3">
-                    <input type="text"  placeholder='Product Name' className='form-control' />
+                    <input type="text"  placeholder='Product Name' className='form-control' value={proDetails.name} onChange={(e)=>setProDetails({...proDetails,name:e.target.value})} />
                 </div>
                 <div className="mb-3">
-                    <input type="text"  placeholder='Product Category' className='form-control' />
+                    <input type="text"  placeholder='Product Category' className='form-control' value={proDetails.category} onChange={(e)=>setProDetails({...proDetails,category:e.target.value})} />
                 </div>
                 <div className="mb-3">
-                    <input type="text"  placeholder='Product Price' className='form-control' />
+                    <input type="text"  placeholder='Product Price' className='form-control' value={proDetails.price} onChange={(e)=>setProDetails({...proDetails,price:e.target.value})} />
                 </div>
                 <div className="mb-3">
-                    <input type="text"  placeholder='Stock Quantity' className='form-control' />
+                    <input type="text"  placeholder='Stock Quantity' className='form-control' value={proDetails.stockDetails} onChange={(e)=>setProDetails({...proDetails,stockDetails:e.target.value})} />
                 </div>
                 <div className="mb-3">
-                    <input type="text"  placeholder='Product Description' className='form-control' />
+                    <input type="text"  placeholder='Product Description' className='form-control' value={proDetails.description} onChange={(e)=>setProDetails({...proDetails,description:e.target.value})} />
                 </div>
             </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={handleClose}>
+          <Button variant="danger" onClick={handleCancel                                      }>
             Cancel
           </Button>
-          <Button variant="success" onClick={handleClose}>
+          <Button variant="success" onClick={handleAdd} >
             upload
           </Button>
         </Modal.Footer>
