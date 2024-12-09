@@ -4,7 +4,8 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { addProductApi } from '../Services/allAPi';
 
-function AddPro() {
+
+function AddPro({setAddStatus}) {
   const [show, setShow] = useState(false);
 
   const[proDetails,setProDetails] = useState({
@@ -44,8 +45,15 @@ function AddPro() {
   else{
     const result = await addProductApi({name,category,price,stockDetails,description})
     console.log(result);
-
-    
+    if(result.status>=200 && result.status<300){
+      alert('product added successfully')
+      handleClose()
+      setAddStatus(result)
+    }
+    else{
+      alert('something went wrong')
+      handleCancel()
+    }
   }
 }
  
@@ -83,7 +91,7 @@ function AddPro() {
             </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={handleCancel                                      }>
+          <Button variant="danger" onClick={handleCancel}>
             Cancel
           </Button>
           <Button variant="success" onClick={handleAdd} >
